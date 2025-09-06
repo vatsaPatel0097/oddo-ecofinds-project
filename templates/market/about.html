@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <div class="card shadow-sm mb-4">
+      <div class="card-body">
+        <h2 class="mb-3">About <span class="text-gradient">EcoFinds</span></h2>
+        <p class="lead">
+          EcoFinds is a second-hand marketplace built during a hackathon. 
+          Our mission is simple: extend product lifecycles and make sustainable consumption easier for everyone.
+        </p>
+      </div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+      <div class="card-body">
+        <h4 class="mb-3">How it works</h4>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">✨ Sign up &amp; log in</li>
+          <li class="list-group-item">📷 Create product listings with images and specs</li>
+          <li class="list-group-item">🛒 Browse items, add to cart, and checkout (mock)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h4 class="mb-3">Why EcoFinds?</h4>
+        <p class="mb-1"><strong>♻️ Sustainable:</strong> Reduce waste by giving items a second life.</p>
+        <p class="mb-1"><strong>💰 Affordable:</strong> Buy and sell at fair prices.</p>
+        <p><strong>🤝 Community-driven:</strong> Connect with local buyers and sellers.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Inline styling -->
+<style>
+  .card {
+    border: 1px solid rgba(15,118,110,0.05);
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 6px 18px rgba(13, 38, 59, 0.04);
+  }
+  .text-gradient {
+    background: linear-gradient(90deg, #0f766e, #06b6d4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .list-group-item {
+    border: none;
+    padding-left: 0;
+  }
+</style>
+{% endblock %}

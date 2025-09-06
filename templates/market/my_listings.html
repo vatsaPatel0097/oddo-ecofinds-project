@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2>My Listings</h2>
+  <a class="btn btn-primary" href="{% url 'market:product_create' %}">+ Add Product</a>
+</div>
+
+{% if products %}
+  <div class="row">
+    {% for product in products %}
+      <div class="col-md-4 mb-3">
+        <div class="card">
+          <img src="{{ product.primary_image_url }}" class="card-img-top" style="height:160px;object-fit:cover;">
+          <div class="card-body">
+            <h5 class="card-title">{{ product.title|truncatechars:50 }}</h5>
+            <p class="mb-1">₹ {{ product.price }}</p>
+            <a href="{% url 'market:product_detail' slug=product.slug %}" class="btn btn-sm btn-primary">View</a>
+            <a href="{% url 'market:product_edit' pk=product.id %}" class="btn btn-sm btn-outline-warning">Edit</a>
+            <a href="{% url 'market:product_delete' pk=product.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <div class="alert alert-info">You haven't listed any products yet.</div>
+{% endif %}
+{% endblock %}

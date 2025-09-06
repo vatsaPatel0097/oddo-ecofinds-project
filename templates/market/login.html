@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-11 col-sm-9 col-md-7 col-lg-5">
+    <!-- A small top spacer so hero doesn't touch the card -->
+    <div class="py-4"></div>
+
+    <div class="card p-4 shadow-soft border-0">
+      <h2 class="h4 text-center fw-bold mb-4">Login to Your Account</h2>
+
+      <!-- Flash / messages -->
+      {% if messages %}
+        <div class="alert alert-danger">
+          <ul class="mb-0">
+            {% for message in messages %}
+              <li>{{ message }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+
+      <!-- Login form -->
+      <form method="post" novalidate>
+        {% csrf_token %}
+        <div class="mb-3">
+          <label for="id_email" class="form-label small fw-medium">Email</label>
+          <input type="email" class="form-control form-control-lg" id="id_email" name="email" placeholder="you@example.com" required value="{{ request.POST.email|default:'' }}">
+        </div>
+
+        <div class="mb-3">
+          <label for="id_password" class="form-label small fw-medium">Password</label>
+          <input type="password" class="form-control form-control-lg" id="id_password" name="password" placeholder="Enter your password" required>
+        </div>
+
+        <div class="d-grid mt-3">
+          <button type="submit" class="btn btn-lg btn-primary">Login</button>
+        </div>
+
+        <div class="text-center mt-3 small text-muted">
+          Don’t have an account? <a href="{% url 'market:register' %}" class="fw-semibold text-decoration-none">Register</a>
+        </div>
+      </form>
+    </div>
+
+    <!-- extra bottom spacing -->
+    <div class="py-5"></div>
+  </div>
+</div>
+
+<!-- Page-specific styles to tighten layout and match screenshot -->
+<style>
+  /* make the card look compact and centered exactly like screenshot */
+  .shadow-soft {
+    box-shadow: 0 10px 30px rgba(2,6,23,0.06) !important;
+  }
+
+  /* larger form controls like screenshot */
+  .form-control-lg {
+    padding: 12px 14px;
+    border-radius: 8px;
+  }
+
+  /* card styling (keeps visual system from base but tighter) */
+  .card {
+    border-radius: 12px;
+    background: #fff;
+    max-width: 520px;
+    margin-left: auto;
+    margin-right: auto;
+    border: 1px solid rgba(15,118,110,0.04);
+  }
+
+  /* full-width gradient button consistent with base style */
+  .btn-primary {
+    background: linear-gradient(90deg, #0f766e, #06b6d4) !important;
+    border: none;
+    box-shadow: 0 6px 18px rgba(6,182,212,0.08);
+    color: #fff;
+    padding: 11px 18px;
+    border-radius: 8px;
+  }
+
+  /* subtle focus for accessibility */
+  .form-control:focus {
+    border-color: #0f766e;
+    box-shadow: 0 6px 18px rgba(6,182,212,0.12);
+    outline: none;
+  }
+
+  /* headline */
+  h2.h4 {
+    letter-spacing: 0.2px;
+  }
+
+  /* keep content vertically centered on taller screens a bit more */
+  @media(min-height:900px) {
+    main.container.py-5 {
+      padding-top: 48px !important;
+      padding-bottom: 48px !important;
+    }
+  }
+
+  /* small screens: reduce margins so card fits nicely */
+  @media (max-width: 420px) {
+    .card { padding: 18px; }
+    .form-control-lg { padding: 10px 12px; }
+    .btn-primary { padding: 10px; }
+  }
+</style>
+{% endblock %}

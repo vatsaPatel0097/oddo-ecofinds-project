@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <div>
+    <h2 class="mb-0">Discover items</h2>
+    <div class="small text-muted">Browse local second-hand goods</div>
+  </div>
+
+  {% if request.session.user_id %}
+    <a class="btn btn-primary btn-sm" href="{% url 'market:product_create' %}">+ Add Product</a>
+  {% else %}
+    <a class="btn btn-outline-primary btn-sm" href="{% url 'market:login' %}">Login to sell</a>
+  {% endif %}
+</div>
+
+<!-- messages -->
+{% if messages %}
+  <div class="mb-3">
+    {% for m in messages %}
+      <div class="alert alert-{{ m.tags|default:'info' }} mb-2">{{ m }}</div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+<!-- search & filter -->
+<form method="get" class="row g-2 align-items-center mb-4" aria-label="Search products">
+  <div class="col-12 col-md-6">
+    <div class="input-group">
+      <input
+        type="text"
+        name="q"
+        class="form-control"
+        placeholder="Search by title or description..."
+        aria-label="Search"
+        value="{{ q|default:'' }}">
+      <button class="btn btn-outline-secondary" type="submit" aria-label="Search button">
+        🔍
+      </button>
+    </div>
+  </div>
+
+  <div class="col-6 col-md-3">
+    <select name="category" class="form-select" aria-label="Filter by category">
+      <option value="">All categories</option>
+      {% for key,label in categories %}
+        <option value="{{ key }}" {% if key == category %}selected{% endif %}>{{ label }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="col-6 col-md-3 d-grid">
+    <a href="{% url 'market:product_list' %}" class="btn btn-outline-secondary">Reset</a>
+  </div>
+</form>
+
+<!-- grid -->
+<div class="row g-3">
+  {% for product in page_obj %}
+    <div class="col-6 col-sm-6 col-md-4 col-lg-3">
+      <article class="card h-100 product-card">
+        <a href="{% url 'market:product_detail' slug=product.slug %}" class="stretched-link" aria-label="View {{ product.title }}">
+          {% if product.primary_image_url %}
+            <img
+              src="{{ product.primary_image_url }}"
+              class="card-img-top"
+              alt="{{ product.title }}"
+              loading="lazy"
+              style="height:180px; object-fit:cover; border-top-left-radius:12px; border-top-right-radius:12px;">
+          {% else %}
+            <div class="card-img-top bg-light d-flex align-items-center justify-content-center"
+                 style="height:180px; border-top-left-radius:12px; border-top-right-radius:12px;">
+              <span class="text-muted small">No image</span>
+            </div>
+          {% endif %}
+        </a>
+
+        <div class="card-body d-flex flex-column">
+          <div class="d-flex align-items-start justify-content-between mb-2">
+            <div>
+              <h5 class="card-title mb-1" title="{{ product.title }}">{{ product.title|truncatechars:60 }}</h5>
+              <div class="small text-muted">{{ product.get_category_display }}</div>
+            </div>
+            <div class="text-end">
+              <div class="h6 mb-0">₹ {{ product.price }}</div>
+            </div>
+          </div>
+
+          <p class="card-text small text-muted mb-3">{{ product.description|truncatechars:80 }}</p>
+
+          <div class="mt-auto d-flex justify-content-between align-items-center">
+            <a href="{% url 'market:product_detail' slug=product.slug %}" class="btn btn-sm btn-primary">View</a>
+
+            {% if request.session.user_id and request.session.user_id == product.owner.id %}
+              <div class="btn-group" role="group" aria-label="Owner actions">
+                <a href="{% url 'market:product_edit' pk=product.id %}" class="btn btn-sm btn-outline-warning">Edit</a>
+                <a href="{% url 'market:product_delete' pk=product.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </article>
+    </div>
+  {% empty %}
+    <div class="col-12">
+      <div class="alert alert-info">No products found. Try changing your search or add a new product.</div>
+    </div>
+  {% endfor %}
+</div>
+
+<!-- pagination -->
+<nav aria-label="Page navigation" class="mt-4">
+  <ul class="pagination justify-content-center flex-wrap">
+    {% with q_param=q|urlencode category_param=category|urlencode %}
+      {% if page_obj.has_previous %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ page_obj.previous_page_number }}&q={{ q_param }}&category={{ category_param }}" aria-label="Previous">Prev</a>
+        </li>
+      {% endif %}
+
+      <li class="page-item disabled">
+        <span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+      </li>
+
+      {% if page_obj.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ page_obj.next_page_number }}&q={{ q_param }}&category={{ category_param }}" aria-label="Next">Next</a>
+        </li>
+      {% endif %}
+    {% endwith %}
+  </ul>
+</nav>
+
+<!-- Page-specific CSS -->
+<style>
+  .product-card {
+    border: 1px solid rgba(15,118,110,0.04);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform .12s ease, box-shadow .12s ease;
+    background: #fff;
+  }
+  .product-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 14px 30px rgba(2,6,23,0.08);
+  }
+  .product-card .card-body { padding: 1rem; }
+  .product-card .card-title { font-size: 1rem; }
+  .product-card .card-text { margin-bottom: .6rem; }
+</style>
+{% endblock %}

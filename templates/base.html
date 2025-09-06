@@ -1,0 +1,199 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>{% block title %}EcoFinds{% endblock %}</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Embedded CSS Theme -->
+  <style>
+    :root{
+      --primary: #0f766e;
+      --accent: #06b6d4;
+      --bg-soft: #f8faf9;
+      --muted: #6b7280;
+      --card: #ffffff;
+    }
+
+    html, body { height: 100%; }
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+      background: var(--bg-soft);
+      color: #0f172a;
+      -webkit-font-smoothing:antialiased;
+    }
+
+    main.container {
+      flex: 1 0 auto;
+      padding-top: 32px;
+      padding-bottom: 32px;
+    }
+
+    .bg-soft { background: var(--bg-soft) !important; }
+
+    .brand-mark {
+      width:44px;
+      height:44px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      box-shadow: 0 6px 18px rgba(6, 182, 212, 0.12);
+      border-radius: 10px;
+    }
+
+    .navbar .nav-link { color: #374151; font-weight:500; }
+    .navbar .nav-link:hover { color: var(--primary); }
+
+    .navbar .btn-primary {
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      border: none;
+      box-shadow: 0 6px 18px rgba(6,182,212,0.08);
+    }
+
+    .navbar .btn-outline-primary {
+      border-color: rgba(15,118,110,0.3);
+      color: var(--primary);
+    }
+
+    .bg-gradient-light{
+      background: linear-gradient(90deg, rgba(6,182,212,0.06), rgba(15,118,110,0.02));
+    }
+
+    .card {
+      border: 1px solid rgba(15,118,110,0.05);
+      border-radius: 12px;
+      background: var(--card);
+      box-shadow: 0 6px 18px rgba(13, 38, 59, 0.04);
+    }
+
+    .form-control:focus {
+      border-color: var(--primary);
+      box-shadow: 0 6px 18px rgba(6,182,212,0.06);
+      outline: none;
+    }
+
+    .small { font-size: .9rem; color: var(--muted); }
+
+    /* Footer */
+    .site-footer {
+      background: #fff;
+      border-top: 1px solid rgba(15,118,110,0.04);
+      padding: 20px 0;
+      font-size: 0.95rem;
+      color: var(--muted);
+    }
+    .site-footer .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .site-footer a { color: #475569; text-decoration: none; }
+    .site-footer a:hover { color: var(--primary); text-decoration: underline; }
+
+    @media (max-width: 576px) {
+      .site-footer .footer-inner { flex-direction: column; text-align: center; }
+    }
+
+    
+  </style>
+
+  {% block head_extra %}{% endblock %}
+</head>
+<body class="bg-soft">
+
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm border-bottom">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center gap-2" href="{% url 'market:product_list' %}">
+  <!-- Use actual logo instead of brand-mark -->
+  <img src="{% static 'assets/images/logo/logo3.jpg' %}" 
+       alt="EcoFinds Logo" 
+       style="height:80px; width:auto;">
+  <div class="d-flex flex-column"> 
+    <span class="fw-bold">EcoFinds</span>
+    <small class="text-muted">Second-hand, thoughtfully</small>
+  </div>
+</a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="mainNav">
+        <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link" href="{% url 'market:product_list' %}">Products</a></li>
+          {% comment %} <li class="nav-item"><a class="nav-link" href="{% url 'market:categories' %}">Categories</a></li> {% endcomment %}
+          <li class="nav-item"><a class="nav-link" href="{% url 'market:about' %}">About</a></li>
+        </ul>
+
+        <div class="d-flex align-items-center">
+          {% if request.session.user_id %}
+            <div class="me-3 d-flex align-items-center">
+              <span class="small text-muted me-2">Hi,</span>
+              <span class="fw-semibold">{{ request.session.username }}</span>
+            </div>
+
+            <!-- Dashboard, Cart, Logout (Cart shown only when logged in) -->
+            <a class="btn btn-outline-secondary btn-sm me-2" href="{% url 'market:user_dashboard' %}">Dashboard</a>
+            <a class="btn btn-outline-primary btn-sm me-2" href="{% url 'market:cart' %}">Cart</a>
+            <a class="btn btn-primary btn-sm" href="{% url 'market:logout' %}">Logout</a>
+          {% else %}
+            <a class="btn btn-outline-primary btn-sm me-2" href="{% url 'market:login' %}">Login</a>
+            <a class="btn btn-primary btn-sm" href="{% url 'market:register' %}">Register</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO (commented out — enable if you want a hero) -->
+  {% comment %} {# 
+  <header class="py-4 bg-gradient-light">
+    <div class="container d-flex flex-column flex-md-row align-items-center justify-content-between">
+      <div>
+        <h1 class="h4 mb-1">Welcome to EcoFinds</h1>
+        <p class="mb-0 text-muted small">Buy & sell quality second-hand goods — sustainable, local, affordable.</p>
+      </div>
+      <div>
+        {% if request.session.user_id %}
+          <a class="btn btn-outline-success btn-sm" href="{% url 'market:product_create' %}">Create Listing</a>
+        {% else %}
+          <a class="btn btn-success btn-sm" href="{% url 'market:register' %}">Start Selling</a>
+        {% endif %}
+      </div>
+    </div>
+  </header>
+  #} {% endcomment %}
+
+  <!-- Main content -->
+  <main class="container py-5">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="small text-muted">© {{ now.year }} EcoFinds</div>
+      <div class="small footer-links">
+        <a href="" class="me-3">Terms</a>
+        <a href="" class="me-3">Privacy</a>
+        <a href="">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>
